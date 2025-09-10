@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Dashboard</title>
+  <link rel="stylesheet" href="adminDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+</head>
+<body>
+  <div class="main">
+  <div class="sidebar">
+    <div class="image">
+      <div class="logoimg"></div>
+         <h3 class="logo"></h3>
+         <h7 class="logo1"></h7>
+     </div>
+     <div class="dash"><a href=""><i class="fas fa-tachometer-alt"></i>&nbsp;&nbsp;&nbsp;Dashboard</a></div>
+     <div class="doctor"><a href="doctor.html"><i class="fa-solid fa-user-doctor"></i>&nbsp;&nbsp;&nbsp;Doctor</a></div>
+     <div class="patient"><a href=""><i class="fa-solid fa-hospital-user"></i>&nbsp;&nbsp;&nbsp;Patient</a></div>
+     <div class="message"><a href="inventory.html"><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;&nbsp;Inventory</a></div>
+     <div class="med"><a href=""><i class="fa-solid fa-briefcase-medical"></i>&nbsp;&nbsp;&nbsp;Medication</a></div>
+     <div class="doc"><a href=""><i class="fa-solid fa-file-medical"></i>&nbsp;&nbsp;&nbsp;Document</a></div>
+     <div class="setting"><a href=""><i class="fa-solid fa-gears"></i>&nbsp;&nbsp;&nbsp;Setting</a></div>
+     <div class="log"><a href=""><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;Logout</a></div>
+  </div>
+<div class="search"><div class="search1"><input type="text" placeholder="Search" class="in"></div></div>
+<div class="patient1"><h1 class="text1">45</h1><p class="text2">New Patient</p><div class="a1" style="text-align: center;padding: 5%; font-size: 40px;color: white;"><i class="fas fa-procedures"></i></div></div>
+<div class="doctor1"><h1 class="text1">34</h1><p class="text2">Our Doctor</p><div class="a1" style="text-align: center;padding: 5%; font-size: 40px;color: white;"><i class="fas fa-user-md"></i> </div></div>
+<div class="operation"><h1 class="text1">12</h1><p class="text2">Operation</p><div class="a1" style="text-align: center;padding: 5%; font-size: 40px;color: white;"><i class="fas fa-hospital"></i></div></div>
+<div class="income"><h1 class="text1">$5728</h1><p class="text2">Income</p><div class="a1" style="text-align: center;padding: 5%; font-size: 40px;color: white;"><i class="fas fa-dollar-sign"></i> </div></div>
+<h1 class="text3">Patient Status</h1>
+<canvas id="myChart" style="position: absolute; width:100%;max-width:700px; margin-top: 250px; margin-left: 230px; " ></canvas>
+<script>
+  const xValues = [100,200,300,400,500,600,700,800,900,1000];
+  
+  new Chart("myChart", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [{ 
+        data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+        borderColor: "red",
+        fill: false
+      },  { 
+        data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+        borderColor: "blue",
+        fill: false
+      }]
+    },
+    options: {
+      legend: {display: false}
+    }
+  });
+  </script>
+<div class="profile">
+<h2 class="best">Best Doctor</h2>
+<p class="best1">This Year</p>
+<div class="img"></div>
+<h2 class="best3">Dr. Alia Khan, MD </h2>
+<p class="best4">Cardiologist, HealthSphere Hospital</p>
+
+
+
+
+
+</div>
+  </div>
+</body>
+</html>
