@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Form Display</title>
+  <style>
+    .form-section {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Select Donation Type:</h2>
+  <select id="formSelector" onchange="showForm()">
+    <option value="">-- Select an option --</option>
+    <option value="monthly">Monthly Donation</option>
+    <option value="one-time">One-Time Donation</option>
+    <option value="honor">Honor/Memorial Gift</option>
+  </select>
+
+  <div id="monthly" class="form-section">
+    <h3>Monthly Donation Form</h3>
+    <label>Amount: $<input type="number"></label><br>
+    <label>Start Date: <input type="date"></label>
+  </div>
+
+  <div id="one-time" class="form-section">
+    <h3>One-Time Donation Form</h3>
+    <label>Amount: $<input type="number"></label><br>
+    <label>Card Number: <input type="text"></label>
+  </div>
+
+  <div id="honor" class="form-section">
+    <h3>Honor/Memorial Gift Form</h3>
+    <label>Honoree Name: <input type="text"></label><br>
+    <label>Message: <textarea></textarea></label>
+  </div>
+
+  <script>
+    function showForm() {
+      var selection = document.getElementById("formSelector").value;
+      var sections = document.querySelectorAll(".form-section");
+      
+      // Hide all sections first
+      sections.forEach(function(section) {
+        section.style.display = "none";
+      });
+
+      // Show selected section
+      if (selection) {
+        document.getElementById(selection).style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
