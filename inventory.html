@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory List</title>
+    <link rel="stylesheet" href="inventory.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="margin-left: 300px; font-size: 70px;">Inventory List</h1>
+            <div class="header-actions">
+                <button id="addItemBtn">+ Add Item</button>
+            </div>
+        </header>
+
+        <!-- Filters section -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="productNameFilter" style="color: black;">Product Name:</label>
+                <input type="text" id="productNameFilter" placeholder="Search...">
+            </div>
+            <div class="filter-group">
+                <label for="manufacturerFilter" style="color: black;">Manufacturer:</label>
+                <input type="text" id="manufacturerFilter" placeholder="Search..." >
+            </div>
+            <div class="filter-group">
+                <label for="itemNumberFilter" style="color: black;">Item Number:</label>
+                <input type="text" id="itemNumberFilter" placeholder="Search..." >
+            </div>
+            <div class="filter-group">
+                <label for="problemConditionFilter" style="color: black;">Problem/Condition:</label>
+                <input type="text" id="problemConditionFilter" placeholder="Search..." >
+            </div>
+            <div class="filter-group">
+                <label for="categoryFilter" style="color: black;">Category:</label>
+                <select id="categoryFilter">
+                    <option value="">All</option>
+                    <option value="Medication">Medication</option>
+                    <option value="Cream">Cream</option>
+                    <option value="Syrup">Syrup</option>
+                    <option value="Tablet">Tablet</option>
+                </select>
+            </div>
+            <button class="apply-filter-btn" id="applyFilterBtn">Apply Filter</button>
+        </div>
+
+        <!-- Inventory Table -->
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Item No.</th>
+                    <th>Problem</th>
+                    <th>Manufacturer</th>
+                    <th>Category</th>
+                    <th>Store Box</th>
+                    <th>Price (per piece)</th>
+                    <th>Quantity</th>
+                    <th>Expiry Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryBody"></tbody>
+        </table>
+
+        <!-- Add Item Modal -->
+        <div id="addItemModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Add New Item</h2>
+                <form id="addItemForm">
+                    <label for="newProductName">Product Name:</label>
+                    <input type="text" id="newProductName" name="productName" required><br><br>
+
+                    <label for="newItemNumber">Item No.:</label>
+                    <input type="text" id="newItemNumber" name="itemNo"><br><br>
+
+                    <label for="newProblem">Problem/Condition:</label>
+                    <input type="text" id="newProblem" name="problem"><br><br>
+
+                    <label for="newManufacturer">Manufacturer:</label>
+                    <input type="text" id="newManufacturer" name="manufacturer"><br><br>
+
+                    <label for="newCategory">Category:</label>
+                    <select id="newCategory" name="category">
+                        <option value="Medication">Medication</option>
+                        <option value="Cream">Cream</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Tablet">Tablet</option>
+                    </select><br><br>
+
+                    <label for="newStoreBox">Store Box:</label>
+                    <input type="text" id="newStoreBox" name="storeBox"><br><br>
+
+                    <label for="newPrice">Price (per piece):</label>
+                    <input type="number" id="newPrice" min="0" step="0.01" name="price"><br><br>
+
+                    <label for="newQuantity">Quantity:</label>
+                    <input type="number" id="newQuantity" min="0" name="quantity"><br><br>
+
+                    <label for="newExpiryDate">Expiry Date:</label>
+                    <input type="date" id="newExpiryDate" name="expiryDate"><br><br>
+
+                    <button type="submit" name="register">Save Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load items when page is loaded
+        window.onload = () => {
+            loadInventory();
+        };
+
+        // Load inventory items using AJAX
+        function loadInventory(query = '') {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'loadInventory.php' + (query ? '?' + query : ''), true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const items = JSON.parse(xhr.responseText);
+                    const inventoryBody = document.getElementById('inventoryBody');
+                    inventoryBody.innerHTML = ''; 
+
+                    if (items.length === 0) {
+                        inventoryBody.innerHTML = '<tr><td colspan="10">No items found</td></tr>';
+                        return;
+                    }
+
+                    items.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.productName}</td>
+                            <td>${item.itemNo}</td>
+                            <td>${item.problem}</td>
+                            <td>${item.manufacturer}</td>
+                            <td>${item.category}</td>
+                            <td>${item.storeBox}</td>
+                            <td>${item.price}</td>
+                            <td>${item.quantity}</td>
+                            <td>${item.expiryDate}</td>
+                            <td><button onclick="deleteItem(${item.id})">Delete</button></td>
+                        `;
+                        inventoryBody.appendChild(row);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        // Handle form submission for adding a new item
+        document.getElementById('addItemForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'addInventoryItem.php', true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    if (xhr.responseText.includes('success')) {
+                        loadInventory();
+                        alert('Item added successfully');
+                        closeModal();
+                    } else {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(formData);
+        });
+
+        // Handle filter button click
+        document.getElementById('applyFilterBtn').addEventListener('click', function () {
+            const filters = {
+                productName: document.getElementById('productNameFilter').value,
+                manufacturer: document.getElementById('manufacturerFilter').value,
+                itemNo: document.getElementById('itemNumberFilter').value,
+                problem: document.getElementById('problemConditionFilter').value,
+                category: document.getElementById('categoryFilter').value
+            };
+            loadInventory(new URLSearchParams(filters).toString());
+        });
+
+        // Define deleteItem function
+        function deleteItem(id) {
+            if (!confirm("Are you sure you want to delete this item?")) return;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'deleteInventoryItem.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    loadInventory();
+                    alert('Item deleted successfully');
+                }
+            };
+            xhr.send('id=' + id);
+        }
+
+        // Modal handling
+        document.getElementById('addItemBtn').addEventListener('click', function () {
+            document.getElementById('addItemModal').style.display = 'block';
+        });
+
+        document.querySelector('.close-button').addEventListener('click', function () {
+            closeModal();
+        });
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('addItemModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        function closeModal() {
+            document.getElementById('addItemModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
